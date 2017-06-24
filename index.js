@@ -15,18 +15,25 @@ var sOutput;
 
 const cr = '\n';
 
+function spaces() {
+  let s   = '';
+  if (iDepth > 0) {
+    s = ' '.repeat(iDepth);
+  }
+  return s;
+}
 function begin(sModule) {
   let s   = '{';
   iDepth += 2; 
   s      += cr +
-            ' '.repeat(iDepth) + "\"dependencies\": {";
+            spaces() + "\"dependencies\": {";
   iDepth += 2;
   s += beginModule(sModule);
   return s;
 }
 function beginDependency(sModule) {
   let s   = ',' + cr +
-            ' '.repeat(iDepth) + "\"dependencies\": {";
+            spaces() + "\"dependencies\": {";
   iDepth += 2;
   s += beginModule(sModule);
   return s;
@@ -37,24 +44,24 @@ function beginModule(sModule) {
   let sVersion  = aStr[1];
 
   let s   = cr +
-            ' '.repeat(iDepth) + "\"" + sName + "\": {";
+            spaces() + "\"" + sName + "\": {";
   iDepth += 2;
   s      += cr +
-            ' '.repeat(iDepth) + "\"version\": \"" + sVersion + "\"," +
+            spaces() + "\"version\": \"" + sVersion + "\"," +
             cr +
-            ' '.repeat(iDepth) + "\"from\": \""    + sModule + "\"";
+            spaces() + "\"from\": \""    + sModule + "\"";
   return s;
 }
 function endModule() {
   iDepth -= 2;
-  let s   = cr + ' '.repeat(iDepth) + '},'; 
+  let s   = cr + spaces() + '},'; 
   return s;
 }
 function endDependency() {
   let s = '';
   for (let i = 0; i < 2; i++) {
     iDepth -= 2;
-    s      += cr + ' '.repeat(iDepth) + '}';
+    s      += cr + spaces() + '}';
   }
   return s;
 }
@@ -64,38 +71,48 @@ rl.on('line', function(line) {
   let aS        = sLine.split(' ');
   let sModule   = aS[aS.length - 1];
   let iLen      = Math.floor(sLine.lastIndexOf(sModule) / 2);
+  let fProcess  = true;
 
   sOutput       = '';
 
-  if (cnt === 0) {
-    sOutput += begin(sModule);
+  if (iLen === 0) {
+    fProcess = false;
   }
-  else {
-    if (iLen === iLenBefore) {
-      sOutput += endModule();
-      sOutput += beginModule(sModule);
-    }
-    else if (iLen > iLenBefore) {
-      sOutput += beginDependency(sModule);
-    }
-    else if (iLen < iLenBefore) {
-      for(let i = iLen; i < iLenBefore; i++) {
-        sOutput += endDependency();
-      }
-      sOutput += endModule();
-      sOutput += beginModule(sModule);
-    }
+  if (sModule === process.cwd()) {
+    fProcess = false;
   }
 
-  iLenBefore = iLen;
-  cnt++;
+  if (fProcess) {
+    if (cnt === 0) {
+      sOutput += begin(sModule);
+    }
+    else {
+      if (iLen === iLenBefore) {
+        sOutput += endModule();
+        sOutput += beginModule(sModule);
+      }
+      else if (iLen > iLenBefore) {
+        sOutput += beginDependency(sModule);
+      }
+      else if (iLen < iLenBefore) {
+        for(let i = iLen; i < iLenBefore; i++) {
+          sOutput += endDependency();
+        }
+        sOutput += endModule();
+        sOutput += beginModule(sModule);
+      }
+    }
+
+    iLenBefore = iLen;
+    cnt++;
+  }
   process.stdout.write(new Buffer(sOutput));
 })
 .on('close', function() {
   sOutput  = '';
   while (iDepth > 0) {
     iDepth -= 2;
-    sOutput +=  cr + ' '.repeat(iDepth) + '}'; 
+    sOutput +=  cr + spaces() + '}'; 
   }
   sOutput += cr;
   process.stdout.write(new Buffer(sOutput));
