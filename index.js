@@ -11,9 +11,7 @@ const rl = readline.createInterface({
 var cnt = 0;
 var iDepth = 0;
 var iLenBefore;
-var iSpacesBefore;
 var sOutput;
-var bEndDependencyBefore;
 
 const cr = '\n';
 
@@ -62,60 +60,34 @@ function endDependency() {
 }
 
 rl.on('line', function(line) {
-    let sLine     = line.toString();
-    let aS        = sLine.split(' ');
-    let sModule   = aS[aS.length - 1];
-    let iLen      = Math.floor(sLine.lastIndexOf(sModule) / 2);
-    let iSpaces   = 0;
-    let sStr      = '';
-    let ch        = aS[iLen - 2].slice(0,1);
-    let chIndex   = sLine.lastIndexOf(ch);
-    let bEndDependency = false;
-    let bBoth     = false;
-    let bSame     = false;
+  let sLine     = line.toString();
+  let aS        = sLine.split(' ');
+  let sModule   = aS[aS.length - 1];
+  let iLen      = Math.floor(sLine.lastIndexOf(sModule) / 2);
 
-    sOutput       = '';
+  sOutput       = '';
 
-    if (ch.charCodeAt(0) === 96) {
-      bEndDependency = true;
+  if (cnt === 0) {
+    sOutput += begin(sModule);
+  }
+  else {
+    if (iLen === iLenBefore) {
+      sOutput += endModule();
+      sOutput += beginModule(sModule);
     }
-
-    bBoth = bEndDependency && bEndDependencyBefore;
-    bSame = (iLenBefore === iLen);
-
-    while (sLine.charCodeAt(chIndex - 1) === 32 && iSpaces < 10) {
-      iSpaces++;
-      chIndex--;
+    else if (iLen > iLenBefore) {
+      sOutput += beginDependency(sModule);
     }
-
-//    sStr += `${sLine} before=${iLenBefore} now=${iLen} ch=${ch} iSpacesBefore=${iSpacesBefore} bBoth = ${bBoth}`;
-    sStr += `[${cnt}] - ${sModule} bSame=${bSame} iSpacesBefore=${iSpacesBefore} bBoth = ${bBoth}`;
-
-  if (true) { //cnt < 40) {
-    if (cnt === 0) {
-      sOutput += begin(sModule);
-    }
-    else {
-      if (iLen === iLenBefore) {
-        sOutput += endModule();
-        sOutput += beginModule(sModule);
+    else if (iLen < iLenBefore) {
+      for(let i = iLen; i < iLenBefore; i++) {
+        sOutput += endDependency();
       }
-      else if (iLen > iLenBefore) {
-        sOutput += beginDependency(sModule);
-      }
-      else if (iLen < iLenBefore) {
-        for(let i = iLen; i < iLenBefore; i++) {
-          sOutput += endDependency();
-        }
-        sOutput += endModule();
-        sOutput += beginModule(sModule);
-      }
+      sOutput += endModule();
+      sOutput += beginModule(sModule);
     }
   }
 
   iLenBefore = iLen;
-  iSpacesBefore = iSpaces;
-  bEndDependencyBefore = bEndDependency;
   cnt++;
   process.stdout.write(new Buffer(sOutput));
 })
