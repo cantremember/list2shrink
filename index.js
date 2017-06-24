@@ -22,6 +22,7 @@ var cnt = 0;
 var iDepth = 0;
 var iLenBefore;
 var iSpacesBefore;
+var sOutput;
 
 const cr = '\n';
 
@@ -70,7 +71,6 @@ function endDependency() {
 }
 
 rl.on('line', function(line) {
-    let sOutput   = '';
     let sLine     = line.toString();
     let aS        = sLine.split(' ');
     let iLen      = aS.length;
@@ -79,6 +79,8 @@ rl.on('line', function(line) {
     let sStr      = '';
     let ch        = aS[iLen - 2].slice(0,1);
     let chIndex   = sLine.lastIndexOf(ch);
+
+    sOutput       = '';
 
     while (sLine.charCodeAt(chIndex - 1) === 32 && iSpaces < 10) {
       iSpaces++;
@@ -142,6 +144,13 @@ rl.on('line', function(line) {
   cnt++;
   process.stdout.write(new Buffer(sOutput));
 })
-.on('finish', function() {
-  process.exit(0);
+.on('close', function() {
+  sOutput = `iSpacesBefore = ${iSpacesBefore} iDepth = ${iDepth}`;
+  while (iDepth > 0) {
+    iDepth -= 2;
+    sOutput +=  cr + ' '.repeat(iDepth) + '}'; 
+  }
+  sOutput += cr;
+  process.stdout.write(new Buffer(sOutput));
+//  process.exit(0);
 });
