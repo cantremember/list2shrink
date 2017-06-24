@@ -21,8 +21,8 @@ else {
 var cnt = 0;
 var iDepth = 0;
 var iLenBefore;
+var iSpacesBefore;
 
-//const cr = String.fromCharCode(10);
 const cr = '\n';
 
 function begin(sModule) {
@@ -62,11 +62,10 @@ function endModule() {
 }
 function endDependency() {
   let s = '';
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 2; i++) {
     iDepth -= 2;
     s      += cr + ' '.repeat(iDepth) + '}';
   }
-  s += ','
   return s;
 }
 
@@ -75,37 +74,73 @@ rl.on('line', function(line) {
     let sLine     = line.toString();
     let aS        = sLine.split(' ');
     let iLen      = aS.length;
+    let sModule   = aS[iLen - 1];
+    let iSpaces   = 0;
+    let sStr      = '';
+    let ch        = aS[iLen - 2].slice(0,1);
+    let chIndex   = sLine.lastIndexOf(ch);
 
-    if (cnt === 0) {
-      sOutput += begin(aS[iLen - 1]);
+    while (sLine.charCodeAt(chIndex - 1) === 32 && iSpaces < 10) {
+      iSpaces++;
+      chIndex--;
     }
-    else {
-//      if (iLen > 1 && cnt < 15) {
-      let ch = aS[iLen - 2].slice(0, 1);
-  //    let ch = aS[iLen - 2].slice(-1);
+
+    sStr += `${sLine} before=${iLenBefore} now=${iLen} ch=${ch} iSpacesBefore=${iSpacesBefore}`;
+
+    /*
+    if (versionNumber < 5) {
+      ch          = aS[iLen - 2].slice(-1);
+    }
+    */
 //      sOutput += `Line(${cnt}) | ${aS.length} | ${ch} | ${ch.charCodeAt(0)} | ${aS[aS.length - 1]}\n`;
   //      let ch = aS[iLen - 2].slice(0, 1);
   //      if (versionNumber < 5) {
   //      }
   //      let sOutput = `Line(${cnt}) | ${aS.length} | ${ch} | ${ch.charCodeAt(0)} | ${aS[aS.length - 1]}\n`;
         
+    // ok, Einstein.  Use lastIndexOf.  sModule, then second to last
+    // then last.  Then find the spaces.
+
+    
+       /*
+    if (iLen > 2) {
+      let sStr3 = aS[iLen - 3];
+      let iLen3 = sLine.lastIndexOf(sStr3);
+      let sStr2 = aS[iLen - 2];
+      let iLen2 = sLine.lastIndexOf(sStr2);
+      let iLen1 = sLine.lastIndexOf(sModule);
+      let iLenX = aS[iLen - 3].length;
+      let iSpaces = iLen2 - iLen3 + iLenX
+      sStr = `${sModule}(${iLen1})  ${sStr2}(${iLen2})  ${sStr3}(${iLen3}) spaces=${iSpaces}`;
+    }
+   */
+    if (true) { //cnt < 40) {
+      if (cnt === 0) {
+        sOutput += begin(sModule);
+      }
+      else {
+//        sOutput += sStr;
         if (iLen === iLenBefore) {
           sOutput += endModule();
-          sOutput += beginModule(aS[iLen - 1]);
+          sOutput += beginModule(sModule);
         }
         else if (iLen > iLenBefore) {
-          sOutput += beginDependency(aS[iLen - 1]);
+          sOutput += beginDependency(sModule);
         }
         else if (iLen < iLenBefore) {
-          sOutput += endDependency();
-          sOutput += beginModule(aS[iLen - 1]);
+          for(let i = 0; i < iSpacesBefore; i += 2) {
+            sOutput += endDependency();
+          }
+          sOutput += endModule();
+          sOutput += beginModule(sModule);
         }
       }
-//    }
+    }
 
-    iLenBefore = iLen;
-    cnt++;
-    process.stdout.write(new Buffer(sOutput));
+  iLenBefore = iLen;
+  iSpacesBefore = iSpaces;
+  cnt++;
+  process.stdout.write(new Buffer(sOutput));
 })
 .on('finish', function() {
   process.exit(0);
