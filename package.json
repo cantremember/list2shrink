@@ -14,7 +14,10 @@
     "command",
     "line",
     "Node.js",
-    "npm"
+    "npm",
+    "shrinkwrap",
+    "list2shrink"
+    "pipe"
   ],
   "author": "Bessie Malek",
   "license": "MIT",
