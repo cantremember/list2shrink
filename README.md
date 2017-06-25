@@ -18,7 +18,7 @@ You can *shinkwrap* the versions used in your Node.js project by including a `np
     </tr>
     <tr>
       <td align="left">
-```
+
 ├─┬ autoprefixer-core@5.2.1
   ├── browserslist@0.4.0
   ├── caniuse-db@1.0.30000387
@@ -28,10 +28,10 @@ You can *shinkwrap* the versions used in your Node.js project by including a `np
     ├── js-base64@2.1.9
     └─┬ source-map@0.4.4
       └── amdefine@1.0.0
-```
+
       </td>
       <td align="left">
-```
+
 +-- autoprefixer-core@5.2.1
   +-- browserslist@0.4.0
   +-- caniuse-db@1.0.30000387
@@ -41,7 +41,7 @@ You can *shinkwrap* the versions used in your Node.js project by including a `np
     +-- js-base64@2.1.9
     `-- source-map@0.4.4
       `-- amdefine@1.0.0
-```
+
       </td>
     </tr>
   </tbody>
