@@ -2,6 +2,13 @@
 
 This is a command line pipe that can be used to automatically generate an npm-shrinkwrap.json file.
 
+## Install with npm
+
+Since this is a command line, it should be installed globally:
+```
+npm install --global list2shrink
+```
+
 ## usage
 
 ```
