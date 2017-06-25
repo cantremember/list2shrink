@@ -70,6 +70,10 @@ rl.on('line', function(line) {
   let sLine     = line.toString();
   let aS        = sLine.split(' ');
   let sModule   = aS[aS.length - 1];
+  if (sModule === 'extraneous') {
+    aS.pop();
+    sModule = aS[aS.length - 1];
+  }
   let iLen      = Math.floor(sLine.lastIndexOf(sModule) / 2);
   let fProcess  = true;
 
