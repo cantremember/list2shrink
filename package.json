@@ -1,0 +1,29 @@
+{
+  "name": "list2shrink",
+  "version": "0.1.0",
+  "description": "create a npm-shrinkwrap.json from npm list",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amnotafraid/list2shrink.git"
+  },
+  "keywords": [
+    "npm-shrinkwrap",
+    "command",
+    "line",
+    "Node.js",
+    "npm"
+  ],
+  "author": "Bessie Malek",
+  "license": "MIT",
+  "preferGlobal": true,
+  "bin": {
+    "list2shrink": "index.js"
+  },
+  "bugs": {
+    "url": "https://github.com/amnotafraid/list2shrink/issues"
+  },
+  "homepage": "https://github.com/amnotafraid/list2shrink#readme"
+}
