@@ -2,6 +2,13 @@
 
 This is a command line pipe that can be used to automatically generate an npm-shrinkwrap.json file.
 
+## Install with npm
+
+Since this is a command line, it should be installed globally:
+```
+npm install --global list2shrink
+```
+
 ## usage
 
 ```
@@ -18,7 +25,7 @@ You can *shinkwrap* the versions used in your Node.js project by including a `np
     </tr>
     <tr>
       <td align="left">
-```
+<pre>
 ├─┬ autoprefixer-core@5.2.1
   ├── browserslist@0.4.0
   ├── caniuse-db@1.0.30000387
@@ -28,10 +35,10 @@ You can *shinkwrap* the versions used in your Node.js project by including a `np
     ├── js-base64@2.1.9
     └─┬ source-map@0.4.4
       └── amdefine@1.0.0
-```
+</pre>
       </td>
       <td align="left">
-```
+<pre>
 +-- autoprefixer-core@5.2.1
   +-- browserslist@0.4.0
   +-- caniuse-db@1.0.30000387
@@ -41,24 +48,24 @@ You can *shinkwrap* the versions used in your Node.js project by including a `np
     +-- js-base64@2.1.9
     `-- source-map@0.4.4
       `-- amdefine@1.0.0
-```
+</pre>
       </td>
     </tr>
   </tbody>
 </table>
 
 However, when you move your project to another location and execute `npm install`, you get different versions.  For example:
-```
+<pre>
 +-- autoprefixer-core@5.2.1
   +-- browserslist@0.4.0
-  +-- caniuse-db@1.0.30000694
+  +-- caniuse-db@1.0.30000<b>694</b>
   +-- num2fraction@1.2.2
   `-- postcss@4.1.16
     +-- es6-promise@2.3.0
     +-- js-base64@2.1.9
     `-- source-map@0.4.4
-      `-- amdefine@1.0.1
-```
+      `-- amdefine@<b>1.0.1</b>
+</pre>
 Notice the different versions?
 
 You can force the `npm install` to get the same versions by adding this `npm-shrinkwrap.json` file in the same directory as your `package.json` file:
