@@ -1,6 +1,6 @@
 {
   "name": "list2shrink",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "create a npm-shrinkwrap.json from npm list",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
