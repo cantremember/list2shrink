@@ -123,7 +123,7 @@ The problem is that it's a pain in the neck to make that `*.json` file.  So, if 
 
 *Hint*:  Save your npm list in a file like this:
 ```
-npm list | NpmList.txt
+npm list > NpmList.txt
 ```
 Later on, you can generate an `npm-shrinkwrap.json` file like this:
 ```
