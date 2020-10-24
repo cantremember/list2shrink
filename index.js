@@ -39,9 +39,9 @@ function beginDependency(sModule) {
   return s;
 }
 function beginModule(sModule) {
-  let aStr      = sModule.split('@');
-  let sName     = aStr[0];
-  let sVersion  = aStr[1];
+  let aStr      = sModule.split('@'); // version delimiter
+  let sVersion  = aStr.pop();
+  let sName     = aStr.join('@'); // scoped modules!
 
   let s   = cr +
             spaces() + "\"" + sName + "\": {";
@@ -68,6 +68,8 @@ function endDependency() {
 
 rl.on('line', function(line) {
   let sLine     = line.toString();
+  sLine = sLine.replace(/UNMET PEER DEPENDENCY/g, '');
+
   let aS        = sLine.split(' ');
   let sModule   = aS[aS.length - 1];
   if (sModule === 'extraneous') {
