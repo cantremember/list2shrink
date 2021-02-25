@@ -47,9 +47,7 @@ function beginModule(sModule) {
             spaces() + "\"" + sName + "\": {";
   iDepth += 2;
   s      += cr +
-            spaces() + "\"version\": \"" + sVersion + "\"," +
-            cr +
-            spaces() + "\"from\": \""    + sModule + "\"";
+            spaces() + "\"version\": \"" + sVersion + "\"";
   return s;
 }
 function endModule() {
@@ -68,11 +66,11 @@ function endDependency() {
 
 rl.on('line', function(line) {
   let sLine     = line.toString();
-  sLine = sLine.replace(/UNMET PEER DEPENDENCY/g, '');
+  sLine = sLine.replace(/UNMET (PEER |)DEPENDENCY/g, '');
 
-  let aS        = sLine.split(' ');
+  let aS        = sLine.split(/[ ]+/);
   let sModule   = aS[aS.length - 1];
-  if (sModule === 'extraneous') {
+  if ([ 'extraneous', 'invalid', 'deduped' ].indexOf(sModule) !== -1) {
     aS.pop();
     sModule = aS[aS.length - 1];
   }
